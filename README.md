@@ -9,9 +9,9 @@ The 'doc' folder contains documentation on the use of these utilities and the 't
 
 **NOTE:** While care has been made to remove errors the outputs of these utilities come with no guarantee of accuracy. Please check the outputs of these utilities are accurate and suitable before using in research or production settings.
 
-## Requirments
-Python, version 3
-Linux - however other operating systems may work with little or no modification needed.
+## Requirements
+- Python, version 3
+- Linux - however other operating systems may work with little or no modification needed.
 
 ## Author
 
