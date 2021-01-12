@@ -1,10 +1,10 @@
-## Installation
+# Installation
 
-# Requirements:
+## Requirements:
 
 The annotation utilities are written in, and require, a recent version of Python (version 3).
 
-# Instructions:
+## Instructions:
 
 The utilities do not require installing. Provided they are downloaded and are in a directory along with the lib directory they can be run from that location using python (ie. python3 /path/to/utility.py).
 
@@ -16,6 +16,6 @@ python3 install.py
 No changes will be made to your user account settings without confirmation.
 
 
-# Uninstallation:
+## Uninstallation:
 
 To uninstall simply delete the directory containing these utilites. If you have used the installer to make the utilites available without typing in the file path you will need to edit the ~/.bashrc file to comment out or remove the added line (indicated by a preceeding identifying comment).

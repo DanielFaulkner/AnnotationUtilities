@@ -1,16 +1,16 @@
 # Available tests:
 All tests are designed to work on Linux, minor modifications are likely to be required for use with other operating systems.
 
-conversiontest.py
+**conversiontest.py**  
 This python program calls the annoconv.py program from a terminal window and converts each of the provided files in the sampledata directory to every supported file type and save the result in a folder called convertedfiles.
 
-filtertest.py
+**filtertest.py**  
 This python program calls the annofilter.py program from a terminal window and performs a set of predefined filtering options on a sampledata file. The results are saved in a folder called filteredfiles.
 
-viewertest.py
+**viewertest.py**  
 This python program starts the annoview.py program using either the sample data or downloaded RefSeq data.
 
-scriptexample.sh
+**scriptexample.sh**  
 A small example demonstrating how the filter and conversion utilties can be combined and used as part of an automated shell script. The results are saved in a folder called scriptoutput.
 
 
