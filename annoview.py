@@ -15,6 +15,7 @@
 
 import shutil   # Needed to get the terminal size
 from lib.libAnnoView import *
+from lib.libAnnoShared import loadTrackFile
 
 # Object which accepts user input and displays the requested information
 class controlPane(object):
