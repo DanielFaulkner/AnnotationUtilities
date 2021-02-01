@@ -104,7 +104,7 @@ class Annotation(object):
         otherAttributes = fields[8]
         firstAttribute = otherAttributes.split(';')[0]
         firstAttribute = firstAttribute.replace('='," ")  # Change = to space if = is used
-        repID = firstAttribute.split(' ')[1].strip()
+        repID = firstAttribute.split(' ')[-1].strip()
         repID = repID.replace('"',"")                   # Remove quotes if used
         repID = repID.replace("'","")                   # Remove quotes if used
         # Variables for external use:
@@ -263,7 +263,8 @@ class loadTrackFile(object):
             while line:
                 annoentry = Annotation(line,self.type,self.header)
                 # Long if statement to check if the annotation spans the range completely, starts in the range or ends in the range.
-                if annoentry.chrName.upper()==chr and ((annoentry.alignStart<start and annoentry.alignEnd>end) or (annoentry.alignStart>start and annoentry.alignStart<end) or (annoentry.alignEnd>start and annoentry.alignEnd<end)):
+                # NOTE: Removal of the first <= and >= in the below line will omit annotations of the exact same length.
+                if annoentry.chrName.upper()==chr and ((annoentry.alignStart<=start and annoentry.alignEnd>=end) or (annoentry.alignStart>start and annoentry.alignStart<end) or (annoentry.alignEnd>=start and annoentry.alignEnd>end)):
                     # Store annotation
                     displayItems.append(annoentry)
                     # Load the next line

@@ -47,7 +47,6 @@ def featureOverlap(chr, start, end, reftrackobj, returnall=0):
     # Return results with highest priority
     else:           # Else return the feature with the highest priority
         names = []
-        featureOut = EmptyName
         featurePriority = EmptyPriority
         newPriority = EmptyPriority
         for item in featurelist:
@@ -68,6 +67,7 @@ def featureOverlap(chr, start, end, reftrackobj, returnall=0):
     # Default value if no features overlap
     if featureOut == "":
         featureOut = EmptyName
+        featureOutID = ""
     return featureOut, featureOutID
 
 # featureAddColumn: Adds to an annotation file 2 additional columns for the type and name of other features present.
