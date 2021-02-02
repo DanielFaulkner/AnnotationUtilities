@@ -264,7 +264,7 @@ class loadTrackFile(object):
                 annoentry = Annotation(line,self.type,self.header)
                 # Long if statement to check if the annotation spans the range completely, starts in the range or ends in the range.
                 # NOTE: Removal of the first <= and >= in the below line will omit annotations of the exact same length.
-                if annoentry.chrName.upper()==chr and ((annoentry.alignStart<=start and annoentry.alignEnd>=end) or (annoentry.alignStart>start and annoentry.alignStart<end) or (annoentry.alignEnd>=start and annoentry.alignEnd>end)):
+                if annoentry.chrName.upper()==chr and ((annoentry.alignStart<=start and annoentry.alignEnd>=end) or (annoentry.alignStart>=start and annoentry.alignStart<=end) or (annoentry.alignEnd>=start and annoentry.alignEnd<=end)):
                     # Store annotation
                     displayItems.append(annoentry)
                     # Load the next line
