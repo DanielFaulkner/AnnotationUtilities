@@ -60,6 +60,41 @@ Filtering a file to remove annotations which end in _alt.
 
 python3 annofilter.py -i test/sampledata/DFAM.tsv -o DFAMfiltered.tsv --annonames \w*_alt --regex --exclude
 
+## Annotation tabulate (annotabify.py)
+
+Converts a GTF/GFF formatted file into a standard, TSV, tab separated file. The resulting file should be suitable for spreadsheet or statistics packages which do not support GTF's mix of tab and semicolon separated fields.
+If the output is saved as a .gtf file the output is still recognised by these utilities. This operation can be undone using the -r/--reverse option to store any modifications which have been made in the GTF format.
+
+**Arguments:**  
+Input filename 			(required, filepath)  
+Output filename 		(required, filepath)  
+-r/--reverse:	Reverses the tabulation function to convert back to a standard GTF format.
+-t/--header:	Include the header line [0-No, 1-If present, 2-Yes]. Default is 1.
+
+**Example:**  
+Tabulating a GTF file so all fields are separated by tab characters.
+
+python3 annotabify.py test/sampledata/GTF.gtf GTFtabulated.gtf
+
+## Annotation overlapping feature (annofeat.py)
+
+This utility reads an annotation file and looks for features in a reference annotation file which overlap. These are then added as additional tab separated columns in the output. One column for the feature type and one for the feature ID. A margin can be specified to extend the overlapping region to include neighbouring features. Additionally the output can be configured to return all results or just those with the highest priority, transcripts/exons by default, see comments in libAnnoFeat.py file for instructions on modifying the priority list.
+This utility can compare any two support annotation files but is most likely to be used to compare the results of an analysis against a genome annotation file.
+NOTE: This utility has received very limited optimisation work, therefore expect the utility to take a while when used with larger files.
+
+**Arguments:**  
+Query filename 			(required, filepath)  
+Reference filename  (required, filepath)  
+Output filename 		(required, filepath)  
+-m/--margin:  Additional margin (in bps) to include in the search for overlapping features.
+-a/--all:     Returns all overlapping features as a semicolon separated list.
+-t/--title:   Title to use for the column header (if a header line is present).
+
+**Example:**  
+Searching for overlapping features with itself, an unrealistic use case.
+
+python3 annofeat.py test/sampledata/GTF.gtf test/sampledata/GTF.gtf output.gtf -a -t OverlappingPlus10 -m 10
+
 ## Annotation viewer (annoview.py)
 
 There are many text editors and spreadsheet programs suitable for examining annotation files. This utility does not aim to compete with these, but instead provide a means to open two annotation files and compare their contents graphically to give an indication of an annotations relevance when viewed in context.
