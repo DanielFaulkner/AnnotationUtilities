@@ -68,8 +68,8 @@ If the output is saved as a .gtf file the output is still recognised by these ut
 **Arguments:**  
 Input filename 			(required, filepath)  
 Output filename 		(required, filepath)  
--r/--reverse:	Reverses the tabulation function to convert back to a standard GTF format.
--t/--header:	Include the header line [0-No, 1-If present, 2-Yes]. Default is 1.
+-r/--reverse:	Reverses the tabulation function to convert back to a standard GTF format.  
+-t/--header:	Include the header line [0-No, 1-If present, 2-Yes]. Default is 1.  
 
 **Example:**  
 Tabulating a GTF file so all fields are separated by tab characters.
@@ -86,9 +86,9 @@ NOTE: This utility has received very limited optimisation work, therefore expect
 Query filename 			(required, filepath)  
 Reference filename  (required, filepath)  
 Output filename 		(required, filepath)  
--m/--margin:  Additional margin (in bps) to include in the search for overlapping features.
--a/--all:     Returns all overlapping features as a semicolon separated list.
--t/--title:   Title to use for the column header (if a header line is present).
+-m/--margin:  Additional margin (in bps) to include in the search for overlapping features.  
+-a/--all:     Returns all overlapping features as a semicolon separated list.  
+-t/--title:   Title to use for the column header (if a header line is present).  
 
 **Example:**  
 Searching for overlapping features with itself, an unrealistic use case.
