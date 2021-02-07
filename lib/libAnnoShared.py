@@ -204,7 +204,11 @@ class loadTrackFile(object):
             self.type=filetype.upper()
         # Store the first line incase it is a header line needed later
         self.fileobj.seek(0)
-        self.header = self.fileobj.readline()
+        line = self.fileobj.readline()
+        self.header = line              # Store the first line as a header regardless
+        while line[0]=="#":
+            self.header = line          # Replace with the last comment line if multiple lines are present
+            line = self.fileobj.readline()
         self.fileobj.seek(0)
         # Index the file for faster access times later
         self.indexFile()
