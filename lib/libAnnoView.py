@@ -3,8 +3,6 @@
 #
 # By Daniel R Faulkner
 
-#import time    # Needed if benchmarking a functions performance
-
 import shutil   # Needed to get the terminal size
 from operator import itemgetter
 from lib import libAnnoShared   # Shared functions

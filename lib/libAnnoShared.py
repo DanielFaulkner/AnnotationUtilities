@@ -193,7 +193,8 @@ class loadTrackFile(object):
         # Initalise object variables
         self.warningmsg = ""
         self.annoType = fixedannotype   # Some annotation files may not list a type as they are exclusivly one type
-        self.ordered = 1
+        self.ordered = 1                # Chromosomes are grouped together
+        self.sorted = 1                 # The file is sorted by start position
         self.fileobj = fileobj
         self.cachedEntries = []
         self.smallonly = smallonly      # Variable stored with the object for use by external functions interacting with the object
@@ -210,31 +211,43 @@ class loadTrackFile(object):
         if indexlines:
             self.indexLines()
     def indexFile(self):
-        """Create an index of chromosome start positions to speed up file access"""
+        """Create an index of chromosome start positions to speed up file access and check annotation order"""
         # NOTE: Using the annotation object to parse each line slows startup considerably. (approx factor of 4)
         #starttime2 = time.time() # Index benchmarking line
         self.fileobj.seek(0)
         curChr = ""
+        curStart = -1
         position = 0
         indexChr = {}
         line = self.fileobj.readline()
         while line:
             if line[0] != "#":                          # Ignore commonly used comment characters
-                if self.type=="GTF":
-                    chrName = line.split('\t')[0].strip()
+                if self.type=="GTF":                    # Process fixed positions without Annotation class overhead
+                    fields = line.split('\t')
+                    chrName = fields[0].strip()
+                    startpos = int(fields[3])
                 elif self.type=="BED":
-                    chrName = line.split('\t')[0].strip()
+                    fields = line.split('\t')
+                    chrName = fields[0].strip()
+                    startpos = int(fields[1])
                 else:
                     annoentry = Annotation(line,self.type,self.header)
                     chrName = annoentry.chrName
+                    startpos = annoentry.alignStart
+                # Check if the annotations are ordered by start position, smallest to largest
+                if startpos<curStart and chrName==curChr:   # Check if the start position has decreased while the chromosome has stayed the same
+                    self.sorted = 0
+                curStart = startpos
+                # Check chromosomes are grouped together and store the start position for each chromsome
                 if chrName!=curChr:         # If the new chr name is different, update the start position
                     if chrName not in indexChr:
                         position = self.fileobj.tell()-len(line)
                         indexChr[chrName.upper()] = position
                     else:                               # NOTE: Need to account for unordered files!
                         #print("WARNING: File not sorted by chromosome, access times will be longer.")
-                        self.warningmsg = "WARNING: File not sorted by chromosome, access times will be longer."
+                        self.warningmsg = "WARNING: File not grouped by chromosome, access times will be longer."
                         self.ordered = 0
+                        self.sorted = 0
                     curChr = chrName
             line=self.fileobj.readline()
         self.chrIndex = indexChr
@@ -244,7 +257,6 @@ class loadTrackFile(object):
         # Reduces memory usage compared to using readlines - but does make sorting by column harder
         self.fileobj.seek(0)
         pos=[]
-        #line = 1
         line=self.fileobj.readline()
         while line:
             if line[0] != "#":                          # Ignore commonly used comment characters
@@ -271,6 +283,8 @@ class loadTrackFile(object):
                     line=self.fileobj.readline()
                 elif self.ordered==1 and annoentry.chrName.upper()!=chr:
                     line=None                       # File is in chr order so stop searching for entries
+                elif self.sorted==1 and annoentry.alignStart>end:
+                    line=None                       # File is sorted by start position so stop searching for additional entries
                 else:
                     line=self.fileobj.readline()    # File is not in order so continue to the end. TODO: Handle this better in indexing.
         self.cachedEntries = displayItems
