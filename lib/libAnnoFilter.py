@@ -3,7 +3,7 @@
 #
 # By Daniel R Faulkner
 
-from lib.libAnnoShared import columnnum
+from lib.libAnnoShared import columnnum, regexMatch
 import re
 
 ## Filter functions
@@ -92,21 +92,6 @@ def filterChromosome(annoobj, names=[], exclude=0, regex=0):
     return passed
 
 ## Supporting Functions
-
-# Support regular expressions in the names list
-def regexMatch(query, list):
-    """Loops through a list of regular expressions until a match is found"""
-    # Loop through the list looking for a match
-    passed = 0
-    for name in list:
-        try:
-            regname = re.compile(name)
-        except:
-            raise Exception(name+" is not a compatible regular expression.")
-        if regname.search(query):
-            passed=1
-            break
-    return passed
 
 # Produce a dictionary object of first open reading frame positions
 # INPUT: The ORF fileobject

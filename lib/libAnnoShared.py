@@ -3,6 +3,8 @@
 #
 # By Daniel R Faulkner
 
+import re
+
 # Return the column number from a name in the header.
 # Note: This is case sensitive. An advancement in future maybe to return a dictionary with all header columns.
 def columnnum(header, name):
@@ -15,6 +17,23 @@ def columnnum(header, name):
         else:
             count = count +1
     return column
+
+# Checks the query against a list of regular expressions.
+# INPUT: A string to examine. A list of regular expression search terms.
+# OUTPUT: Returns 0 if no match is found or 1 if one of the regular expressions matches
+def regexMatch(query, list):
+    """Loops through a list of regular expressions until a match is found"""
+    # Loop through the list looking for a match
+    passed = 0
+    for name in list:
+        try:
+            regname = re.compile(name)
+        except:
+            raise Exception(name+" is not a compatible regular expression.")
+        if regname.search(query):
+            passed=1
+            break
+    return passed
 
 # Creates an object for an entry in an annotation file and applies basic conversions to make the data consistant
 # INPUT: Line from annotation file, the input file format and the header line where available.
