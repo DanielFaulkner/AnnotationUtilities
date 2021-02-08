@@ -254,7 +254,7 @@ def featureClosestAddColumn(annofileobj, reftrackobj, outfileobj, senseorder=0, 
     while line[0]=="#":
         header = line
         line = annofileobj.readline()
-    extracolstmp = "{} Name\t{} Type\t{} Strand\t{} Distance\tWithin Name\tWithin Strand\tWithin Type\tWithin Distance\t{} Name\t{} Type\t{} Strand\t{} Distance\n"
+    extracolstmp = "\t{} Name\t{} Type\t{} Strand\t{} Distance\tWithin Name\tWithin Strand\tWithin Type\tWithin Distance\t{} Name\t{} Type\t{} Strand\t{} Distance\n"
     if senseorder:
         extracols = extracolstmp.format("AntiSense","AntiSense","AntiSense","AntiSense","Sense","Sense","Sense","Sense")
     else:
