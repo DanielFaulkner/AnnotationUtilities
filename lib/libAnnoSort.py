@@ -25,11 +25,12 @@ def sort(trackobj, outputfile):
         # Create a list of alignment start positions and line positions
         line = trackobj.fileobj.readline()
         while line:
-            annoentry = libAnnoShared.Annotation(line, trackobj.type, trackobj.header)
-            if annoentry.chrName.upper()==chromsome:
-                chrlineindex.append([annoentry.alignStart,trackobj.fileobj.tell()-len(line)])
-            elif annoentry.chrName.upper()!=chromsome and trackobj.ordered==1:
-                line = None
+            if line[0]!="#":
+                annoentry = libAnnoShared.Annotation(line, trackobj.type, trackobj.header)
+                if annoentry.chrName.upper()==chromsome:
+                    chrlineindex.append([annoentry.alignStart,trackobj.fileobj.tell()-len(line)])
+                elif annoentry.chrName.upper()!=chromsome and trackobj.ordered==1:
+                    line = None
             if line:
                 line = trackobj.fileobj.readline()
         # Sort the start positions

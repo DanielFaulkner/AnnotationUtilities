@@ -244,7 +244,7 @@ def featureOverlappingAddColumn(annofileobj, reftrackobj, outfileobj, margin=0, 
 # Simple usage example:
 #trackobj = libAnnoShared.loadTrackFile(open("RefFilename.gtf"))            # Load the files into a track object
 #featureClosestAddColumn(open('queryfile.bed'), trackobj, open('output.tsv','w'))  # Outputs a file with additional columns on nearby features
-def featureClosestAddColumn(annofileobj, reftrackobj, outfileobj, senseorder=0, returnall=0):
+def featureClosestAddColumn(annofileobj, reftrackobj, outfileobj, senseorder=0, returnall=0, features=[]):
     """Adds a column detailing the feature in a region"""
     type = libAnnoShared.detectFileType(annofileobj)
     annofileobj.seek(0)
@@ -274,7 +274,7 @@ def featureClosestAddColumn(annofileobj, reftrackobj, outfileobj, senseorder=0, 
             if annoObj.alignStart<startPrev:# Reset start position if the current annotation preceeds the previous one
                 startpos=None               # If no start position given the function moves to the start of the chromosome
                 startPrev = annoObj.alignStart
-            before, within, after, startpos = featureClosest(annoObj, reftrackobj, startpos, [], returnall)
+            before, within, after, startpos = featureClosest(annoObj, reftrackobj, startpos, features, returnall)
             # Check if we are outputting based on file position or sense/antisense.
             # TODO
             newcolstmp = "\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n"

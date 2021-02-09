@@ -8,6 +8,8 @@ import re
 
 EmptyChar = "."     # Character to use for empty fields
 
+# TODO: Additional error checking to return an error message if an out of range column number is used
+
 # Creates a class for addressing Human Protein Atlas files
 # Usage example:
 #atlasobj = atlas(open('atlasfilename'))
