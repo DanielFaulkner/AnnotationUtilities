@@ -12,5 +12,5 @@ echo
 echo Expanding the gtf file so all columns are separated by a tab
 python3 ../annotabify.py scriptoutput/convertedfile.gtf scriptoutput/tabbifiedfile.gtf -t 1
 echo
-echo Adding overlapping feature columns to the annotation file. Comparing to itself. Treating file as gtf formatted for purpose of parsing the file.
-python3 ../annofeat.py scriptoutput/tabbifiedfile.gtf scriptoutput/tabbifiedfile.gtf scriptoutput/overlappingfeatures.gtf -t Overlapping -a
+echo Adding closest feature columns to the annotation file. Comparing to itself. Treating file as gtf formatted for purpose of parsing the file.
+python3 ../annofeat.py scriptoutput/tabbifiedfile.gtf scriptoutput/tabbifiedfile.gtf scriptoutput/closestfeatures.gtf -a

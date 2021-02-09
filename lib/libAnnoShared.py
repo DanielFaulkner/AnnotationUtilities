@@ -257,6 +257,7 @@ class loadTrackFile(object):
                     annoentry = Annotation(line,self.type,self.header)
                     chrName = annoentry.chrName
                     startpos = annoentry.alignStart
+                chrName = chrName.upper()
                 # Check if the annotations are ordered by start position, smallest to largest
                 if startpos<curStart and chrName==curChr:   # Check if the start position has decreased while the chromosome has stayed the same
                     self.sorted = 0
@@ -265,7 +266,7 @@ class loadTrackFile(object):
                 if chrName!=curChr:         # If the new chr name is different, update the start position
                     if chrName not in indexChr:
                         position = self.fileobj.tell()-len(line)
-                        indexChr[chrName.upper()] = position
+                        indexChr[chrName] = position
                     else:                               # NOTE: Need to account for unordered files!
                         #print("WARNING: File not sorted by chromosome, access times will be longer.")
                         self.warningmsg = "WARNING: File not grouped by chromosome, access times will be longer."
