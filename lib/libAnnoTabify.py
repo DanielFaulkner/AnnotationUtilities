@@ -9,6 +9,7 @@
 standardgtfheader = "#seqname\tsource\tfeature\tstart\tend\tscore\tstrand\tframe\tattributes"
 unknownkey = "unknown"
 divider = " "   # GTF Key/Value separator character. Some software outputs '=' but ' ' is standard.
+detabspacechar = "_"    # When using the detab function replace additional spaces with this char
 
 # Principly designed following the GTF specification. (https://mblab.wustl.edu/GTF22.html)
 # But could be adapted to support other file formats in the future.
@@ -76,7 +77,10 @@ def deTabify(infileobj, outfileobj, addheader=0):
     if header:
         header = header.strip()             # Remove any preceeding/following tabs
         if len(header.split('\t'))>8:
-            headings = header.split('\t')[8:]
+            headingsUnmod = header.split('\t')[8:]
+            headings = []
+            for item in headingsUnmod:      # Replace any additional space characters
+                headings.append(item.replace(" ",detabspacechar))
     # Write the header
     if addheader>1:
         newheader = standardgtfheader+'\n'

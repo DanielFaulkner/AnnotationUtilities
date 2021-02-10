@@ -8,7 +8,7 @@ The annotation utilities provides a few tools in aid in the manipulation and ins
 - DFAM
 - GTF/GFF
 
-All files must use tab separation and comments and headers must be indicated with a preceeding '#' character. Each utility will try to determine the filetype based on it's file extension or content. If a utility is unable to determine the file type of an input this can be corrected by changing the file extension to either .bed,.csc,.fam or .gtf. Alternatively it maybe possible to indicate this as an argument when starting a utility.
+All files must use tab separation and comments and headers must be indicated with a preceding '#' character. Each utility will try to determine the file type based on it's file extension or content. If a utility is unable to determine the file type of an input this can be corrected by changing the file extension to either .bed,.csc,.fam or .gtf. Alternatively it maybe possible to indicate this as an argument when starting a utility.
 
 **Requirements:**  
 Python (version 3) is required.  
@@ -76,24 +76,74 @@ Tabulating a GTF file so all fields are separated by tab characters.
 
 python3 annotabify.py test/sampledata/GTF.gtf GTFtabulated.gtf
 
-## Annotation overlapping feature (annofeat.py)
+## Annotation sorter (annosort.py)
 
-This utility reads an annotation file and looks for features in a reference annotation file which overlap. These are then added as additional tab separated columns in the output. One column for the feature type and one for the feature ID. A margin can be specified to extend the overlapping region to include neighbouring features. Additionally the output can be configured to return all results or just those with the highest priority, transcripts/exons by default, see comments in libAnnoFeat.py file for instructions on modifying the priority list.
-This utility can compare any two support annotation files but is most likely to be used to compare the results of an analysis against a genome annotation file.
-NOTE: This utility has received very limited optimisation work, therefore expect the utility to take a while when used with larger files.
+This utility checks the order of annotation entries within a file and can either show the status of the file using the -s/--status option or if an output file is provided using the -o/--output option sort the file. The entries are grouped by chromosome, alphabetically, and sorted by the alignment start positions.
+
+**Arguments:**  
+Input filename 			(required, filepath)  
+-o/--output:	Output file name to use.  
+-s/--status:	View the current sort status of the annotation file.  
+
+**Example:**  
+Sort an annotation file.
+
+python3 annosort.py test/sampledata/GTF.gtf -o sortedfile.gtf
+
+View the sort status of an annotation file.
+
+python3 annosort.py test/sampledata/GTF.gtf -s
+
+## Annotation closest/overlapping feature (annofeat.py)
+
+This utility reads an annotation file and looks for features in a reference annotation file which are nearby or overlap. These are then added as additional tab separated columns in the output.  
+The utility has two modes, the default detection method returns the closest features before and following an annotation as well as those overlapping. The features to include when looking for the closest feature can be provided as a comma separated list using the -f/--features option. This adds columns to the annotation file for the closest feature type, name, strand and distance from annotation, in each direction and within.  
+The alternative method detects only features overlapping an annotation, although this region can be extended to include neighbouring features with the -m/--margins option. This adds columns for overlapping feature types and feature names to the annotation file.  
+The output can be configured to return all results using the -a/--all option or just those with the highest priority. The default option is to only include transcripts and exons. This can be modified, see comments in libAnnoFeat.py file for instructions on how to modify the priority list.
+This utility can compare any two support annotation files but is most likely to be used to compare the results of an analysis against a genome annotation file.  
+NOTE: This utility will run significantly slower with files which are not sorted by genomic position.  
 
 **Arguments:**  
 Query filename 			(required, filepath)  
 Reference filename  (required, filepath)  
 Output filename 		(required, filepath)  
--m/--margin:  Additional margin (in bps) to include in the search for overlapping features.  
--a/--all:     Returns all overlapping features as a semicolon separated list.  
--t/--title:   Title to use for the column header (if a header line is present).  
+-m/--margin:  Additional margin (in bps) to include in the search for overlapping features (use with -o).  
+-a/--all:       Returns all overlapping features as a semicolon separated list.  
+-t/--title:     Title to use for the column header, if a header line is present (use with -o).  
+-o/--overlap:   Only returns those results which overlap with an annotation.
+-s/--sense:     Return the results formatted using sense/antisense direction.
+-f/--features:  Features to include when looking for the closest feature.
 
 **Example:**  
-Searching for overlapping features with itself, an unrealistic use case.
+Searching for overlapping features + 10 base pairs with itself, an unrealistic use case.
 
-python3 annofeat.py test/sampledata/GTF.gtf test/sampledata/GTF.gtf output.gtf -a -t OverlappingPlus10 -m 10
+python3 annofeat.py test/sampledata/GTF.gtf test/sampledata/GTF.gtf output.gtf -o -a -t OverlappingPlus10 -m 10
+
+Searching for closest transcripts, exons and UTR features using a hypothetical genome annotation file.
+
+python3 annofeat.py test/sampledata/GTF.gtf genefeatures.gtf output.gtf -a -f transcript,exon,UTR
+
+## Annotation atlas (annoatlas.py)
+
+This utility adds columns from a Human Protein Atlas dataset to an annotation file. If the annotation file format does not include gene names by standard this can be defined manually using the -c/--column option, starting at column 0. The columns to add from the Human Protein Atlas dataset can be defined using the -a/--atlascols option. This option supports a comma separated list of column numbers, column names or regular expression search terms, with the -r/--regex option.  
+NOTE: Only the TSV formatted complete dataset is compatible. The gene name, synonym and Ensembl ID columns are used for detecting a match with an annotation file entry.
+
+**Arguments:**  
+Input filename 			(required, filepath)  
+Atlas filename 			(required, filepath)  
+Output filename 		(required, filepath)  
+-c/--column:    Annotation file column containing gene names.  
+-r/--regex:	    Use regular expression search terms for atlas columns.  
+-a/--atlascols: Human Protein Atlas columns to add to the annotation file.
+
+**Example:**  
+Add specific columns to an annotation file.
+
+python3 annoatlas.py test/sampledata/atlastest.bed proteinatlas.tsv combinedoutput.tsv -c 6 -a 6,7,Chromosome
+
+Add columns containing the word RNA based using a regular expression search term.
+
+python3 annoatlas.py test/sampledata/atlastest.bed proteinatlas.tsv combinedoutput.tsv -c 6 -a RNA -r
 
 ## Annotation viewer (annoview.py)
 
@@ -133,6 +183,38 @@ query r/l	Moves the query view to the right or left (if lines extend beyond the 
 query unedited	Shows the query annotations unedited  
 query edited	Shows the query annotations in a standardised format  
 
+## Example project
+This section includes a short example project using these tools to identify how many annotations have a, potentially, intact promoter and follow a prognostic proteins.  
+Required files:
+- Human Protein Atlas as proteinatlas.tsv
+- NCBI Reference Sequence annotation as hg38.gtf
+- Annotation file as DFAM.tsv
+
+First filter the annotation file to find features with an intact promoter.
+- python3 annofilter.py -i DFAM.tsv -o DFAMfiltered.tsv --minpromoter 100 --defaultend 1000
+
+Convert the file to a GTF file (not needed, but here as an example)
+- python3 annoconv.py -i DFAMfiltered.tsv -o GTFfiltered.gtf -c GTF
+
+To speed up comparisons between feature files ensure NCBI reference annotation is sorted by genomic position.
+- python3 annosort.py hg38.gtf -o hg38sorted.gtf
+
+Convert the annotation file to a standard tsv format.
+- python3 annotabify.py GTFfiltered.gtf GTFtabulated.gtf
+
+Add information on the closest feature
+- python3 annofeat.py GTFtabulated.gtf hg38sorted.gtf GTFfeatures.gtf -s
+
+Add columns from the Human Protein Atlas dataset
+- python3 annoatlas.py GTFfeatures.gtf proteinatlas.tsv GTFatlas.gtf -c 13 -a Pathology -r
+
+Convert back to a standard GTF formated file
+- python3 annotabify.py GTFatlas.gtf GTFdetabulated.gtf -r
+
+
+At the end of these commands the GTF file should contain information on the closest features and relevant prognostic information. This can then be sorted or filtered in a spreadsheet software package, using the GTFatlas.gtf file as a TSV file type, or fed into further analysis software.    
+NOTE: When adding columns to annotation files it is important to preserve the header and file extensions if the file is to be used by another utility, so the software recognises which columns contain essential information.
+
 ## Useful resources
 This section contains links to some useful resources applicable to both using the utilities and on where to find suitable annotation files.  
 
@@ -142,6 +224,7 @@ This section contains links to some useful resources applicable to both using th
 - GTF formatted genome annotation from [UCSC](https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/)
 - GTF formatted genome annotation from [NCBI](https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Homo_sapiens/reference/GCF_000001405.39_GRCh38.p13/)
 - UCSC repeat annotation files from [UCSC's table browser website](https://genome.ucsc.edu/cgi-bin/hgTables)
+- The Human Protein Atlas dataset from [The Human Protein Atlas website](https://www.proteinatlas.org/about/download)
 
 **UCSC Table browser settings:**  
 Open Reading Frame (ORF) positions:  
