@@ -7,6 +7,8 @@ Utilities:
 - Annotation Tabulator - Converts a GTF/GFF file from using both tab and semicolon separators to only tab characters.
 - Annotation Features - Compares two annotation files and adds columns detailing overlapping features.
 - Annotation Viewer - Compares two annotation files and displays a genomic representation of their positions.
+- Annotation Sorter - Sorts entries in an annotation file by position.
+- Annotation Atlas - Adds columns from The Human Protein Atlas dataset to an annotation file.
 
 Combined these utilities should enable an annotation file to be filtered and converted into a format suitable for further analysis. Any interesting annotations can then be formatted to include details on overlapping/nearby features or viewed alongside another annotation file. This can be particularly useful when used with a genomic reference sequence annotation file.
 
@@ -17,8 +19,8 @@ The 'doc' folder contains documentation on the use of these utilities and the 't
 **NOTE:** While care has been made to remove errors the outputs of these utilities come with no guarantee of accuracy. Please check the outputs of these utilities are accurate and suitable before using in research or production settings.
 
 ## Requirements
-- Python, version 3 
-- Linux - however other operating systems may work with little or no modification needed. 
+- Python, version 3
+- Linux - however other operating systems may work with little or no modification needed.
 
 ## Author
 

@@ -254,11 +254,11 @@ def featureClosestAddColumn(annofileobj, reftrackobj, outfileobj, senseorder=0, 
     while line[0]=="#":
         header = line
         line = annofileobj.readline()
-    extracolstmp = "\t{} Name\t{} Type\t{} Strand\t{} Distance\tWithin Name\tWithin Strand\tWithin Type\tWithin Distance\t{} Name\t{} Type\t{} Strand\t{} Distance\n"
+    extracolstmp = "\t{} Name\t{} Type\t{} Strand\t{} Distance\tWithin Name\tWithin Type\tWithin Strand\tWithin Distance\t{} Name\t{} Type\t{} Strand\t{} Distance\n"
     if senseorder:
         extracols = extracolstmp.format("AntiSense","AntiSense","AntiSense","AntiSense","Sense","Sense","Sense","Sense")
     else:
-        extracols = extracolstmp.format("Preceeding","Preceeding","Preceeding","Preceeding","Following","Following","Following","Following")
+        extracols = extracolstmp.format("Preceding","Preceding","Preceding","Preceding","Following","Following","Following","Following")
     newheader = header.strip() + extracols
     outfileobj.write(newheader)    # NOTE: If multiple preceeding comment lines present they will not be preserved using this method
     # For each data line open the annotation position and perform comparison
