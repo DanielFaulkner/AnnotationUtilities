@@ -7,9 +7,9 @@ import re
 
 # Return the column number from a name in the header.
 # Note: This is case sensitive. An advancement in future maybe to return a dictionary with all header columns.
-def columnnum(header, name):
+def columnnum(header, name, default=-1):
     """Returns the column number matching the input string when provided with a tab separated header."""
-    column = -1
+    column = default
     count = 0
     for item in header.split("\t"):
         if item.strip() == name.strip():
@@ -96,23 +96,23 @@ class Annotation(object):
     def parseDfam(self):
         fields = self.line.split('\t')
         # Conversions
-        if fields[columnnum(self.header, "strand")] == "-":
-            start = fields[columnnum(self.header, "alignment end")]
-            end = fields[columnnum(self.header, "alignment start")]
+        if fields[columnnum(self.header, "strand",8)] == "-":
+            start = fields[columnnum(self.header, "alignment end",10)]
+            end = fields[columnnum(self.header, "alignment start",9)]
         else:
-            start = fields[columnnum(self.header, "alignment start")]
-            end = fields[columnnum(self.header, "alignment end")]
+            start = fields[columnnum(self.header, "alignment start",9)]
+            end = fields[columnnum(self.header, "alignment end",10)]
         # Variables for external use:
-        self.repName = fields[columnnum(self.header, "model name")].strip()
-        self.repSize = int(fields[columnnum(self.header, "hmm length")])
-        self.chrName = fields[columnnum(self.header, "#sequence name")].strip()
-        self.chrSize = int(fields[columnnum(self.header, "sequence length")])
-        self.score = int(float(fields[columnnum(self.header, "bit score")]))
-        self.strand = fields[columnnum(self.header, "strand")].strip()
+        self.repName = fields[columnnum(self.header, "model name",2)].strip()
+        self.repSize = int(fields[columnnum(self.header, "hmm length",7)])
+        self.chrName = fields[columnnum(self.header, "#sequence name",0)].strip()
+        self.chrSize = int(fields[columnnum(self.header, "sequence length",13)])
+        self.score = int(float(fields[columnnum(self.header, "bit score",3)]))
+        self.strand = fields[columnnum(self.header, "strand",8)].strip()
         self.alignStart = int(start)
         self.alignEnd = int(end)
-        self.matchStart = int(fields[columnnum(self.header, "hmm start")])
-        self.matchEnd = int(fields[columnnum(self.header, "hmm end")])
+        self.matchStart = int(fields[columnnum(self.header, "hmm start",6)])
+        self.matchEnd = int(fields[columnnum(self.header, "hmm end",7)])
         self.repID = self.NullString
     def parseGtf(self):
         fields = self.line.split('\t')
